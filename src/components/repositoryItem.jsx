@@ -38,16 +38,16 @@ const DisplayInfomrationList = (props) => (
         </View>
         <View style={styles.informationStyle}>
             <View style={{ paddingBottom: 5 }}>
-                <Text color='textSecondary' fontWeight='bold'>{props.fullName}</Text>
-                <Text>{props.description}</Text>
+                <Text color='textSecondary' fontWeight='bold' testID='repoItem-fullnane'>{props.fullName}</Text>
+                <Text testID='repoItem-description'>{props.description}</Text>
             </View>
-            <Text color='textLanguage' format='language'>{props.language}</Text>
+            <Text color='textLanguage' format='language' testID='repoItem-language'>{props.language}</Text>
         </View>
     </View>
 );
 
 //Converts numerical data to string data using K, M
-const suffixConverter = (number) => {
+export const suffixConverter = (number) => {
     if(number >= 1000000){
         const numberInMillions = (number / 1000000);
         const roundedNumber = Math.round( numberInMillions * 10) / 10;
@@ -62,12 +62,12 @@ const suffixConverter = (number) => {
 };
 
 
-const StatisticsItem = ({ statisticName, statisticData }) => {
+const StatisticsItem = ({ statisticName, statisticData, testID }) => {
     const numberSuffix = suffixConverter(statisticData);
 
     return(
         <View style={{flexGrow: 1, alignItems: 'center' }} >
-            <Text color='textPrimary' fontWeight='bold'>{numberSuffix}</Text>
+            <Text color='textPrimary' fontWeight='bold' testID={testID} >{numberSuffix}</Text>
             <Text>{statisticName}</Text>
         </View>
     );
@@ -77,19 +77,19 @@ const StatisticsList = ({ forksCount, stargazersCount, ratingAverage, reviewCoun
 
     return(
         <View style={styles.statisticsContainer}>
-            <StatisticsItem statisticName='Stars' statisticData={stargazersCount} />
-            <StatisticsItem statisticName='Forks' statisticData={forksCount} />
-            <StatisticsItem statisticName='Rating' statisticData={ratingAverage} />
-            <StatisticsItem statisticName='Reviews' statisticData={reviewCount} />
+            <StatisticsItem statisticName='Stars' statisticData={stargazersCount} testID='repoItem-stargazersCount'/>
+            <StatisticsItem statisticName='Forks' statisticData={forksCount} testID='repoItem-forksCount'/>
+            <StatisticsItem statisticName='Rating' statisticData={ratingAverage} testID='repoItem-ratingAverage'/>
+            <StatisticsItem statisticName='Reviews' statisticData={reviewCount} testID='repoItem-reviewCount'/>
         </View>
     );
 };
 
 const RepositoryItem = (props) => {
     return(
-        <View key={props.id} style={styles.mainStyle}>
-            <DisplayInfomrationList ownerAvatarUrl={props.ownerAvatarUrl} fullName={props.fullName} description={props.description} language={props.language}/> 
-            <StatisticsList forksCount={props.forksCount} stargazersCount={props.stargazersCount} ratingAverage={props.ratingAverage} reviewCount={props.reviewCount}/>
+        <View key={props.repo.id} style={styles.mainStyle}>
+            <DisplayInfomrationList ownerAvatarUrl={props.repo.ownerAvatarUrl} fullName={props.repo.fullName} description={props.repo.description} language={props.repo.language}/> 
+            <StatisticsList forksCount={props.repo.forksCount} stargazersCount={props.repo.stargazersCount} ratingAverage={props.repo.ratingAverage} reviewCount={props.repo.reviewCount}/>
         </View>
     );
 };

@@ -7,8 +7,6 @@ import FormikTextInput from './formikComponents/formikTextInput';
 import { Formik } from 'formik';
 import theme from '../theme';
 import useSignIn from '../hooks/useSignin';
-import AuthStorage from '../utils/authStorage';
-import { Token } from 'graphql';
 
 const styles = StyleSheet.create({
     mainStyle: {
@@ -49,11 +47,11 @@ const SignInForm = ({ onSubmit }) => {
     return(
         <View mainStyle={styles.mainStyle}>
             <View style={styles.loginFormStyle}>
-                <FormikTextInput name='username' placeholder='Username'/>
-                <FormikTextInput name='password' placeholder='Password' secureTextEntry/>
+                <FormikTextInput name='username' placeholder='Username' testID='loginForm-usernameInput'/>
+                <FormikTextInput name='password' placeholder='Password' secureTextEntry testID='loginForm-passwordInput'/>
                 <TouchableWithoutFeedback onPress={onSubmit}>
                     <View style={styles.buttonStyle}>
-                        <Text color='textLanguage' fontWeight='bold' style={{ textAlign: 'center' }}>Log in</Text>
+                        <Text color='textLanguage' fontWeight='bold' style={{ textAlign: 'center' }} testID='loginForm-submitButton' >Log in</Text>
                     </View>
                 </TouchableWithoutFeedback>
             </View>
@@ -61,11 +59,18 @@ const SignInForm = ({ onSubmit }) => {
     );
 };
 
+export const SignInContainer = ({ onSubmit }) => (
+    <View>
+        <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
+            {({handleSubmit}) => <SignInForm onSubmit={handleSubmit} />}
+        </Formik>
+    </View>
+)
+
 const SignIn = () => {
     const [signIn] = useSignIn();
     const onSubmit = async (values) => {
         const { username, password } = values;
-
         try{
             await signIn({ username, password });
         }catch(e){
@@ -73,13 +78,7 @@ const SignIn = () => {
         }
     };
 
-    return(
-        <View>
-            <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
-                {({handleSubmit}) => <SignInForm onSubmit={handleSubmit} />}
-            </Formik>
-        </View>
-    );
+    return <SignInContainer onSubmit={onSubmit} />
 };
 
 export default SignIn;

@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, SafeAreaView } from 'react-native';
+import { View, FlatList, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import RepositoryItem from './repositoryItem';
+import { useHistory } from 'react-router-native';
 import useRepositories from '../hooks/useRepository';
 import Text from './text';
+import LoadingScreen from './loadingScreen';
 
 const repoStyles = StyleSheet.create({
     separator: {
@@ -13,48 +15,46 @@ const repoStyles = StyleSheet.create({
     }
 });
 
+
 const itemSeparator = () => <View style={repoStyles.separator}/>;
 
-const RepositoryList = ({ styles }) => {
-    const RenderItem = ({ item }) => (
-        <RepositoryItem 
-            id={item.id}
-            fullName={item.fullName}
-            description={item.description}
-            language={item.language}
-            forksCount={item.forksCount}
-            stargazersCount={item.stargazersCount}
-            ratingAverage={item.ratingAverage}
-            reviewCount={item.reviewCount}
-            ownerAvatarUrl={item.ownerAvatarUrl}
-        />
-    );
+export const RepositoryListContainer = ({ repositories, loading, error, styles }) => {
+    let history = useHistory();
 
-    const { repositories, loading, error } = useRepositories();
-
-    const repositoryNode = repositories;
+    const RenderItem = ({ item }) => {
+        const handlePress = () => {
+            history.push(`/${item.id}`);
+        };
+        
+        return(
+            <TouchableOpacity onPress={handlePress}>
+                <RepositoryItem repo={item} />
+            </TouchableOpacity>
+        )
+    };
 
     if(loading){
-        <SafeAreaView style={styles}>
+        return(<SafeAreaView style={styles}>
             <View>
-                <Text>Loading Repositories</Text>
+                <LoadingScreen itemBeingLoaded={'Repositories'} />
             </View>
-        </SafeAreaView>;
+        </SafeAreaView>);
     }
 
-    if(error){
-        <SafeAreaView style={styles}>
+    if(error || repositories === null){
+        return(<SafeAreaView style={styles}>
             <View>
                 <Text>An error has occured</Text>
+                <Text>{error.message}</Text>
             </View>
-        </SafeAreaView>;
+        </SafeAreaView>);
     }
         
     return(
         <SafeAreaView style={styles}>
             <View style={repoStyles.container}>
                 <FlatList
-                    data={repositoryNode}
+                    data={repositories}
                     ItemSeparatorComponent={itemSeparator}
                     renderItem={RenderItem}
                     keyExtractor={item => item.id}
@@ -62,6 +62,12 @@ const RepositoryList = ({ styles }) => {
             </View>
         </SafeAreaView>
     );
+}
+
+const RepositoryList = ({ styles }) => {
+    const { repositories, loading, error } = useRepositories();
+
+    return <RepositoryListContainer repositories={repositories} loading={loading} error={error} styles={styles}/>
 };
 
 export default RepositoryList;

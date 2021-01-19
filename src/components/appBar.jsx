@@ -35,7 +35,7 @@ const RepositoriesTab = () => {
 
 const SignInTab = () => {
     //handle signing in and out here
-    const { data, loading } = useQuery(AUTHORIZED_USER);
+    const { data, loading, error } = useQuery(AUTHORIZED_USER);
     const authStorage = useContext(AuthStorageContext);
 
     const client = useApolloClient();
@@ -44,6 +44,12 @@ const SignInTab = () => {
         authStorage.deleteAccessToken();
         await client.resetStore();
     };
+
+    if(error) return(
+        <View>
+            <Text fontWeight='bold'>An error has occured</Text>
+        </View>
+    );
 
     if(loading) return (
         <View>
