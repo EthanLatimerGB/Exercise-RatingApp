@@ -4,9 +4,12 @@ import Text from './text';
 
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        padding: 10,
+    },
     mainStyle: {
         backgroundColor: '#FFFFFF',
-        padding: 5,
+        borderRadius: 10
     },
     infomrationContainer: {
         paddingVertical: 10,
@@ -15,6 +18,9 @@ const styles = StyleSheet.create({
     informationStyle: {
         paddingLeft: 10,
         alignSelf: 'stretch',
+    },
+    imageContainer: {
+        padding: 15
     },
     imageStyle: {
         width: 50,
@@ -33,7 +39,7 @@ const styles = StyleSheet.create({
 //Displays title,image, descrioption and language
 const DisplayInfomrationList = (props) => (
     <View style={styles.infomrationContainer}>
-        <View>
+        <View style={styles.imageContainer}>
             <Image style={styles.imageStyle} source={{uri: props.ownerAvatarUrl}}/>
         </View>
         <View style={styles.informationStyle}>
@@ -87,9 +93,11 @@ const StatisticsList = ({ forksCount, stargazersCount, ratingAverage, reviewCoun
 
 const RepositoryItem = (props) => {
     return(
-        <View key={props.repo.id} style={styles.mainStyle}>
-            <DisplayInfomrationList ownerAvatarUrl={props.repo.ownerAvatarUrl} fullName={props.repo.fullName} description={props.repo.description} language={props.repo.language}/> 
-            <StatisticsList forksCount={props.repo.forksCount} stargazersCount={props.repo.stargazersCount} ratingAverage={props.repo.ratingAverage} reviewCount={props.repo.reviewCount}/>
+        <View style={styles.mainContainer}>
+            <View key={props.repo.id} style={styles.mainStyle}>
+                <DisplayInfomrationList ownerAvatarUrl={props.repo.ownerAvatarUrl} fullName={props.repo.fullName} description={props.repo.description} language={props.repo.language}/> 
+                <StatisticsList forksCount={props.repo.forksCount} stargazersCount={props.repo.stargazersCount} ratingAverage={props.repo.ratingAverage} reviewCount={props.repo.reviewCount}/>
+            </View>
         </View>
     );
 };

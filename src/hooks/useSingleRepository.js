@@ -10,6 +10,7 @@ const useSingleRepository = ( id ) => {
     const repositories = useMemo(() => {
         if(data){
             const reposList = data ? data.repository : null;
+            reposList.reviews = reposList.reviews.edges ? reposList.reviews.edges.map(review => review.node) : [];
             return reposList;
         }
     }, [data]);

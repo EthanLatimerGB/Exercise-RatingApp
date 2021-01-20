@@ -41,7 +41,21 @@ query FetchRepository($id: ID!){
     forksCount,
     stargazersCount,
     ratingAverage,
-    reviewCount
+    reviewCount,
+    reviews {
+      edges {
+        node {
+          id
+          text
+          rating
+          createdAt
+          user {
+            id
+            username
+          }
+        }
+      }
+    }
   }
 }
 `;

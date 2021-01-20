@@ -16,8 +16,6 @@ const repoStyles = StyleSheet.create({
 });
 
 
-const itemSeparator = () => <View style={repoStyles.separator}/>;
-
 export const RepositoryListContainer = ({ repositories, loading, error, styles }) => {
     let history = useHistory();
 
@@ -55,7 +53,6 @@ export const RepositoryListContainer = ({ repositories, loading, error, styles }
             <View style={repoStyles.container}>
                 <FlatList
                     data={repositories}
-                    ItemSeparatorComponent={itemSeparator}
                     renderItem={RenderItem}
                     keyExtractor={item => item.id}
                 />
